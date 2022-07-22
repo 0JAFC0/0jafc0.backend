@@ -1,15 +1,20 @@
-package io.github.jafc0.jafcPortfolio.domain.model;
+package io.github.jafc.jafcportfolio.domain.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.DynamicUpdate;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -23,30 +28,33 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "experience")
-public class Experience {
-
+@DynamicUpdate
+@Table(name = "project")
+public class Project {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name_company")
-    private String nameCompany;
-
     @Column
-    private String post;
+    private String name;
 
     @Column
     private String description;
 
     @Column
-    private String duration;
+    @Enumerated(EnumType.STRING)
+    private CategoryEnum category;
 
     @Column
-    @Enumerated(EnumType.STRING)
-    private TypeEnum type;
+    private String imageBase64;
 
-    @ManyToOne
+    @Column(name = "url_project_github")
+    private String urlProjectGithub;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
+
 }

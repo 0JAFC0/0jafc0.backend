@@ -1,17 +1,18 @@
-package io.github.jafc0.jafcPortfolio.domain.model;
-
-import java.util.Base64;
+package io.github.jafc.jafcportfolio.domain.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.DynamicUpdate;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -25,31 +26,25 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "project")
-public class Project {
+@DynamicUpdate
+@Table(name = "review")
+public class Review {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column
-    private String name;
+    private String title;
 
     @Column
-    private String description;
+    private String content;
 
     @Column
-    @Enumerated(EnumType.STRING)
-    private CategoryEnum category;
+    private String imageBase64;
 
-    @Column
-    private Base64 image;
-
-    @Column(name = "url_project_github")
-    private String urlProjectGithub;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
-
 }
